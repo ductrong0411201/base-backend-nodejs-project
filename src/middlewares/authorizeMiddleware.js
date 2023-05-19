@@ -2,14 +2,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = function (req, res, next) {
-  const authorization = req.header("cookie");
+  const authorization = req.cookies;
   if (!authorization) {
     return res
       .status(403)
       .json({ status: 403, message: "Authorization denied" });
   }
   try {
-    let token = authorization.replace('token=', '');
+    let token = authorization.token
     const verify = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verify.user;
     next();
